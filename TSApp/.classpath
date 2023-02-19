@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-j-8.0.32.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/commonsForSQLConnection/commons-dbcp2-2.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/commonsForSQLConnection/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/commonsForSQLConnection/commons-pool2-2.11.1.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/commonsForSQLConnection/jBCrypt-0.4.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
