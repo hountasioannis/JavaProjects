@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UpdateDeleteForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.controllerview</a> &gt; <span class="el_source">UpdateDeleteForm.java</span></div><h1>UpdateDeleteForm.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.controllerview;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.dao.ITeacherDAO;
+import gr.aueb.cf.schoolapp.dao.TeacherDAOImpl;
+import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
+import gr.aueb.cf.schoolapp.dto.TeacherDTO;
+import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.service.ITeacherService;
+import gr.aueb.cf.schoolapp.service.TeacherServiceImpl;
+import gr.aueb.cf.schoolapp.service.exceptions.TeacherNotFoundException;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+
+import java.sql.SQLException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.List;
+
+public class UpdateDeleteForm extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField txtId;
+    private JTextField txtLastname;
+    private JTextField txtFirstname;
+<span class="nc" id="L43">    private ITeacherDAO teacherDAO = new TeacherDAOImpl();</span>
+<span class="nc" id="L44">   private ITeacherService teacherService = new TeacherServiceImpl(teacherDAO);</span>
+   private int listPosition;
+   private int listSize;
+   List&lt;Teacher&gt; teachers;
+
+<span class="nc" id="L49">    public UpdateDeleteForm() {</span>
+<span class="nc" id="L50">        addWindowListener(new WindowAdapter() {</span>
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+                try {
+<span class="nc" id="L55">                   teachers = teacherService.getTeachersByLastname(Main.getSearchForm().getInputLastname());</span>
+<span class="nc" id="L56">                   listPosition = 0;</span>
+<span class="nc" id="L57">                   listSize = teachers.size();</span>
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                   if (listSize == 0) {</span>
+<span class="nc" id="L60">                       txtId.setText(&quot;&quot;);</span>
+<span class="nc" id="L61">                       txtFirstname.setText(&quot;&quot;);</span>
+<span class="nc" id="L62">                       txtLastname.setText(&quot;&quot;);</span>
+<span class="nc" id="L63">                       return;</span>
+                   }
+
+<span class="nc" id="L66">                   txtId.setText(Integer.toString(teachers.get(listPosition).getId()));</span>
+<span class="nc" id="L67">                   txtFirstname.setText(teachers.get(listPosition).getFirstname());</span>
+<span class="nc" id="L68">                   txtLastname.setText(teachers.get(listPosition).getLastname());</span>
+
+
+<span class="nc" id="L71">                } catch (TeacherDAOException  e1) {</span>
+<span class="nc" id="L72">                    String message = e1.getMessage();</span>
+<span class="nc" id="L73">                    JOptionPane.showMessageDialog(null, message, &quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L74">                }</span>
+<span class="nc" id="L75">            }</span>
+        });
+<span class="nc" id="L77">        setResizable(false);</span>
+<span class="nc" id="L78">        setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource(&quot;eduv2.png&quot;)));</span>
+<span class="nc" id="L79">        setTitle(&quot;Ενημέρωση / Διαγραφή Εκπαιδευτή&quot;);</span>
+<span class="nc" id="L80">        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</span>
+<span class="nc" id="L81">        setBounds(100, 100, 423, 300);</span>
+<span class="nc" id="L82">        contentPane = new JPanel();</span>
+<span class="nc" id="L83">        contentPane.setBackground(new Color(245, 255, 250));</span>
+<span class="nc" id="L84">        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+
+<span class="nc" id="L86">        setContentPane(contentPane);</span>
+<span class="nc" id="L87">        contentPane.setLayout(null);</span>
+
+<span class="nc" id="L89">        JLabel lblLastname = new JLabel(&quot;Επώνυμο&quot;);</span>
+<span class="nc" id="L90">        lblLastname.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L91">        lblLastname.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L92">        lblLastname.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L93">        lblLastname.setBounds(22, 55, 68, 20);</span>
+<span class="nc" id="L94">        contentPane.add(lblLastname);</span>
+
+<span class="nc" id="L96">        txtId = new JTextField();</span>
+<span class="nc" id="L97">        txtId.setBackground(new Color(245, 245, 220));</span>
+<span class="nc" id="L98">        txtId.setEditable(false);</span>
+<span class="nc" id="L99">        txtId.setBounds(100, 21, 38, 20);</span>
+<span class="nc" id="L100">        contentPane.add(txtId);</span>
+<span class="nc" id="L101">        txtId.setColumns(10);</span>
+
+<span class="nc" id="L103">        txtLastname = new JTextField();</span>
+<span class="nc" id="L104">        txtLastname.setBounds(100, 55, 170, 20);</span>
+<span class="nc" id="L105">        contentPane.add(txtLastname);</span>
+<span class="nc" id="L106">        txtLastname.setColumns(50);</span>
+
+<span class="nc" id="L108">        txtFirstname = new JTextField();</span>
+<span class="nc" id="L109">        txtFirstname.setBounds(100, 91, 170, 20);</span>
+<span class="nc" id="L110">        contentPane.add(txtFirstname);</span>
+<span class="nc" id="L111">        txtFirstname.setColumns(50);</span>
+
+<span class="nc" id="L113">        JSeparator separator = new JSeparator();</span>
+<span class="nc" id="L114">        separator.setBounds(22, 146, 370, 1);</span>
+<span class="nc" id="L115">        contentPane.add(separator);</span>
+
+<span class="nc" id="L117">        JButton btnFirst = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L118">        btnFirst.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                if (listSize &gt; 0) {</span>
+<span class="nc" id="L122">                    listPosition = 0;</span>
+<span class="nc" id="L123">                    txtId.setText(String.format(&quot;%s&quot;, teachers.get(listPosition).getId()));</span>
+<span class="nc" id="L124">                    txtLastname.setText(teachers.get(listPosition).getLastname());</span>
+<span class="nc" id="L125">                    txtFirstname.setText(teachers.get(listPosition).getFirstname());</span>
+                }
+<span class="nc" id="L127">            }</span>
+        });
+<span class="nc" id="L129">        btnFirst.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;First record.png&quot;)));</span>
+<span class="nc" id="L130">        btnFirst.setBounds(22, 158, 46, 23);</span>
+<span class="nc" id="L131">        contentPane.add(btnFirst);</span>
+
+<span class="nc" id="L133">        JButton btnPrevious = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L134">        btnPrevious.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                    if (listPosition &gt; 0) {</span>
+<span class="nc" id="L138">                        listPosition--;</span>
+<span class="nc" id="L139">                        txtId.setText(String.format(&quot;%s&quot;, teachers.get(listPosition).getId()));</span>
+<span class="nc" id="L140">                        txtLastname.setText(teachers.get(listPosition).getLastname());</span>
+<span class="nc" id="L141">                        txtFirstname.setText(teachers.get(listPosition).getFirstname());</span>
+                    }
+<span class="nc" id="L143">            }</span>
+        });
+<span class="nc" id="L145">        btnPrevious.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Previous_record.png&quot;)));</span>
+<span class="nc" id="L146">        btnPrevious.setBounds(69, 158, 46, 23);</span>
+<span class="nc" id="L147">        contentPane.add(btnPrevious);</span>
+
+<span class="nc" id="L149">        JButton btnNext = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L150">        btnNext.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                    if (listPosition &lt;= listSize - 2) {</span>
+<span class="nc" id="L154">                        listPosition++;</span>
+<span class="nc" id="L155">                        txtId.setText(String.format(&quot;%s&quot;, teachers.get(listPosition).getId()));</span>
+<span class="nc" id="L156">                        txtLastname.setText(teachers.get(listPosition).getLastname());</span>
+<span class="nc" id="L157">                        txtFirstname.setText(teachers.get(listPosition).getFirstname());</span>
+                    }
+<span class="nc" id="L159">            }</span>
+        });
+<span class="nc" id="L161">        btnNext.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Next_track.png&quot;)));</span>
+<span class="nc" id="L162">        btnNext.setBounds(116, 158, 46, 23);</span>
+<span class="nc" id="L163">        contentPane.add(btnNext);</span>
+
+<span class="nc" id="L165">        JButton btnLast = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L166">        btnLast.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                    if (listSize &gt; 0) {</span>
+<span class="nc" id="L170">                        listPosition = listSize - 1;</span>
+<span class="nc" id="L171">                        txtId.setText(String.format(&quot;%s&quot;, teachers.get(listPosition).getId()));</span>
+<span class="nc" id="L172">                        txtLastname.setText(teachers.get(listPosition).getLastname());</span>
+<span class="nc" id="L173">                        txtFirstname.setText(teachers.get(listPosition).getFirstname());</span>
+                    }
+<span class="nc" id="L175">            }</span>
+        });
+<span class="nc" id="L177">        btnLast.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Last_Record.png&quot;)));</span>
+<span class="nc" id="L178">        btnLast.setBounds(163, 158, 46, 23);</span>
+<span class="nc" id="L179">        contentPane.add(btnLast);</span>
+
+<span class="nc" id="L181">        JButton btnDelete = new JButton(&quot;Delete&quot;);</span>
+<span class="nc" id="L182">        btnDelete.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+                int response;
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                if (txtId.getText().equals(&quot;&quot;)) return;</span>
+                try {
+<span class="nc" id="L187">                    int id =  Integer.parseInt(txtId.getText().trim());</span>
+
+<span class="nc" id="L189">                    response = JOptionPane.showConfirmDialog(null, &quot;Είστε σίγουρος&quot;, &quot;Delete&quot;,</span>
+                            JOptionPane.YES_NO_OPTION );
+
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                    if (response == JOptionPane.YES_OPTION) {</span>
+<span class="nc" id="L193">                        teacherService.deleteTeacher(id);</span>
+<span class="nc" id="L194">                        JOptionPane.showMessageDialog(null,  &quot; record deleted&quot;,</span>
+                                &quot;Delete&quot;, JOptionPane.INFORMATION_MESSAGE);
+                    }
+<span class="nc" id="L197">                } catch (TeacherDAOException | TeacherNotFoundException e1) {</span>
+<span class="nc" id="L198">                    String message = e1.getMessage();</span>
+<span class="nc" id="L199">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L200">                }</span>
+<span class="nc" id="L201">            }</span>
+        });
+<span class="nc" id="L203">        btnDelete.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L204">        btnDelete.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L205">        btnDelete.setBounds(22, 202, 98, 36);</span>
+<span class="nc" id="L206">        contentPane.add(btnDelete);</span>
+
+<span class="nc" id="L208">        JButton btnUpdate = new JButton(&quot;Update&quot;);</span>
+<span class="nc" id="L209">        btnUpdate.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                if (txtId.getText().equals(&quot;&quot;)) return;</span>
+<span class="nc" id="L212">                String id = txtId.getText().trim();</span>
+<span class="nc" id="L213">                String inputLastname = txtLastname.getText().trim();</span>
+<span class="nc" id="L214">                String inputFirstname = txtFirstname.getText().trim();</span>
+
+<span class="nc bnc" id="L216" title="All 4 branches missed.">                if (inputLastname.equals(&quot;&quot;) || inputFirstname.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L217">                    JOptionPane.showMessageDialog(null, &quot;not valid input&quot;, &quot;update error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L218">                return;</span>
+                }
+
+                try {
+<span class="nc" id="L222">                    TeacherDTO teacherDTO = new TeacherDTO();</span>
+<span class="nc" id="L223">                    teacherDTO.setId(Integer.parseInt(id));</span>
+<span class="nc" id="L224">                    teacherDTO.setFirstname(inputFirstname);</span>
+<span class="nc" id="L225">                    teacherDTO.setLastname(inputLastname);</span>
+
+<span class="nc" id="L227">                    Teacher teacher = teacherService.updateTeacher(teacherDTO);</span>
+<span class="nc" id="L228">                    JOptionPane.showMessageDialog(null, &quot;record updated&quot;, &quot;update&quot;, JOptionPane.PLAIN_MESSAGE);</span>
+<span class="nc" id="L229">                } catch (TeacherDAOException | TeacherNotFoundException e1) {</span>
+<span class="nc" id="L230">                    String message = e1.getMessage();</span>
+<span class="nc" id="L231">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L232">                }</span>
+<span class="nc" id="L233">            }</span>
+        });
+<span class="nc" id="L235">        btnUpdate.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L236">        btnUpdate.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L237">        btnUpdate.setBounds(121, 202, 98, 36);</span>
+<span class="nc" id="L238">        contentPane.add(btnUpdate);</span>
+
+<span class="nc" id="L240">        JButton btnClose = new JButton(&quot;Close&quot;);</span>
+<span class="nc" id="L241">        btnClose.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L243">                Main.getSearchForm().setEnabled(true);</span>
+<span class="nc" id="L244">                Main.getUpdateDeleteForm().setVisible(false);</span>
+<span class="nc" id="L245">            }</span>
+
+        });
+<span class="nc" id="L248">        btnClose.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L249">        btnClose.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L250">        btnClose.setBounds(220, 202, 98, 36);</span>
+<span class="nc" id="L251">        contentPane.add(btnClose);</span>
+
+<span class="nc" id="L253">        JLabel lblId = new JLabel(&quot;Κωδικός&quot;);</span>
+<span class="nc" id="L254">        lblId.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L255">        lblId.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L256">        lblId.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L257">        lblId.setBounds(22, 19, 68, 20);</span>
+<span class="nc" id="L258">        contentPane.add(lblId);</span>
+
+<span class="nc" id="L260">        JLabel lblFirstname = new JLabel(&quot;Όνομα&quot;);</span>
+<span class="nc" id="L261">        lblFirstname.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L262">        lblFirstname.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L263">        lblFirstname.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L264">        lblFirstname.setBounds(22, 91, 68, 20);</span>
+<span class="nc" id="L265">        contentPane.add(lblFirstname);</span>
+<span class="nc" id="L266">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

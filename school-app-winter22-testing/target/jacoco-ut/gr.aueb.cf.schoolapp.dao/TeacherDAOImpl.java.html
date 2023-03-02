@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TeacherDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.dao</a> &gt; <span class="el_source">TeacherDAOImpl.java</span></div><h1>TeacherDAOImpl.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.dao;
+
+import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
+import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.service.util.DBUtil;
+
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L15">public class TeacherDAOImpl implements ITeacherDAO {</span>
+    @Override
+    public Teacher insert(Teacher teacher) throws TeacherDAOException {
+<span class="fc" id="L18">       String sql = &quot;INSERT INTO TEACHERS (FIRSTNAME, LASTNAME) VALUES (?,?)&quot;;</span>
+
+<span class="fc" id="L20">       try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L21">           String firstname = teacher.getFirstname();</span>
+<span class="fc" id="L22">           String lastname = teacher.getLastname();</span>
+
+<span class="pc bpc" id="L24" title="2 of 4 branches missed.">           if (firstname.equals(&quot;&quot;) || lastname.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L25">               return null;</span>
+           }
+
+<span class="fc" id="L28">           p.setString(1, firstname);</span>
+<span class="fc" id="L29">           p.setString(2, lastname);</span>
+<span class="fc" id="L30">           p.executeUpdate();</span>
+<span class="fc" id="L31">           return teacher;</span>
+<span class="nc bnc" id="L32" title="All 4 branches missed.">       } catch (SQLException e) {</span>
+<span class="nc" id="L33">           e.printStackTrace();</span>
+<span class="nc" id="L34">           throw new TeacherDAOException(&quot;SQL error in teacher &quot; + teacher + &quot; insertion&quot;);</span>
+       }
+    }
+
+    @Override
+    public Teacher update(Teacher teacher) throws TeacherDAOException {
+<span class="fc" id="L40">        String sql = &quot;UPDATE TEACHERS SET FIRSTNAME = ?, LASTNAME = ? WHERE ID = ?&quot;;</span>
+
+<span class="fc" id="L42">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L43">            String firstname = teacher.getFirstname();</span>
+<span class="fc" id="L44">            String lastname = teacher.getLastname();</span>
+<span class="fc" id="L45">            int id = teacher.getId();</span>
+
+<span class="pc bpc" id="L47" title="2 of 4 branches missed.">            if (firstname.equals(&quot;&quot;) || lastname.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L48">                return null;</span>
+            }
+
+<span class="fc" id="L51">            p.setInt(3, id);</span>
+<span class="fc" id="L52">            p.setString(1, firstname);</span>
+<span class="fc" id="L53">            p.setString(2, lastname);</span>
+<span class="fc" id="L54">            p.executeUpdate();</span>
+<span class="fc" id="L55">            return teacher;</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L57">            e.printStackTrace();</span>
+<span class="nc" id="L58">            throw new TeacherDAOException(&quot;SQL error in teacher &quot; + teacher + &quot; update&quot;);</span>
+        }
+    }
+
+    @Override
+    public void delete(int id) throws TeacherDAOException {
+<span class="fc" id="L64">        String sql = &quot;DELETE FROM TEACHERS WHERE ID = ?&quot;;</span>
+
+<span class="fc" id="L66">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L67">            p.setInt(1, id);</span>
+<span class="fc" id="L68">            p.executeUpdate();</span>
+<span class="nc" id="L69">        }catch (SQLException e) {</span>
+<span class="nc" id="L70">            e.printStackTrace();</span>
+<span class="nc" id="L71">            throw new TeacherDAOException(&quot;SQL error &quot; + id + &quot; deleted&quot;);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public List&lt;Teacher&gt; getByLastname(String lastname) throws TeacherDAOException {
+<span class="fc" id="L77">        String sql = &quot;SELECT ID, FIRSTNAME, LASTNAME FROM TEACHERS WHERE LASTNAME LIKE ?&quot;;</span>
+        ResultSet rs;
+<span class="fc" id="L79">        List&lt;Teacher&gt; teachers = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L81">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L82">            p.setString(1, lastname + '%');</span>
+<span class="fc" id="L83">            rs = p.executeQuery();</span>
+
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L86">                Teacher teacher = new Teacher(</span>
+<span class="fc" id="L87">                rs.getInt(&quot;ID&quot;),</span>
+<span class="fc" id="L88">                rs.getString(&quot;FIRSTNAME&quot;),</span>
+<span class="fc" id="L89">                rs.getString(&quot;LASTNAME&quot;)</span>
+                );
+<span class="fc" id="L91">                teachers.add(teacher);</span>
+<span class="fc" id="L92">            }</span>
+
+<span class="fc" id="L94">            return teachers;</span>
+<span class="nc" id="L95">        }catch (SQLException e) {</span>
+<span class="nc" id="L96">            e.printStackTrace();</span>
+<span class="nc" id="L97">            throw new TeacherDAOException(&quot;SQL error &quot; );</span>
+        }
+    }
+
+    @Override
+    public Teacher getById(int id) throws TeacherDAOException {
+<span class="fc" id="L103">        String sql = &quot;SELECT ID, FIRSTNAME, LASTNAME FROM TEACHERS WHERE ID = ?&quot;;</span>
+        ResultSet rs;
+<span class="fc" id="L105">        Teacher teacher = null;</span>
+
+<span class="fc" id="L107">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L108">            p.setInt(1, id);</span>
+<span class="fc" id="L109">            rs = p.executeQuery();</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L112">                teacher = new Teacher (</span>
+<span class="fc" id="L113">                        rs.getInt(&quot;ID&quot;),</span>
+<span class="fc" id="L114">                        rs.getString(&quot;FIRSTNAME&quot;),</span>
+<span class="fc" id="L115">                        rs.getString(&quot;LASTNAME&quot;)</span>
+                );
+            }
+
+<span class="fc" id="L119">            return teacher;</span>
+<span class="nc" id="L120">        }catch (SQLException e) {</span>
+<span class="nc" id="L121">            e.printStackTrace();</span>
+<span class="nc" id="L122">            throw new TeacherDAOException(&quot;SQL error &quot;);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

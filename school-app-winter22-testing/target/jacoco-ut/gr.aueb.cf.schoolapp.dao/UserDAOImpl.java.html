@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.dao</a> &gt; <span class="el_source">UserDAOImpl.java</span></div><h1>UserDAOImpl.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.dao;
+
+
+import gr.aueb.cf.schoolapp.dao.exceptions.UserDAOException;
+
+import gr.aueb.cf.schoolapp.model.User;
+import gr.aueb.cf.schoolapp.service.util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L16">public class UserDAOImpl implements IUserDAO {</span>
+    @Override
+    public User insert(User user) throws UserDAOException {
+<span class="fc" id="L19">        String sql = &quot;INSERT INTO USERS (USERNAME, PASSWORD) VALUES (?,?)&quot;;</span>
+
+<span class="fc" id="L21">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L22">            String username = user.getUsername();</span>
+<span class="fc" id="L23">            String password = user.getPassword();</span>
+
+<span class="pc bpc" id="L25" title="2 of 4 branches missed.">            if (username.equals(&quot;&quot;) || password.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L26">                return null;</span>
+            }
+
+<span class="fc" id="L29">            p.setString(1, username);</span>
+<span class="fc" id="L30">            p.setString(2, password);</span>
+<span class="fc" id="L31">            p.executeUpdate();</span>
+<span class="fc" id="L32">            return user;</span>
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L34">            e.printStackTrace();</span>
+<span class="nc" id="L35">            throw new UserDAOException(&quot;SQL error in user &quot; + user + &quot; insertion&quot;);</span>
+        }
+    }
+
+    @Override
+    public User update(User user) throws UserDAOException {
+<span class="fc" id="L41">        String sql = &quot;UPDATE USERS SET USERNAME = ?, PASSWORD = ? WHERE ID = ?&quot;;</span>
+
+<span class="fc" id="L43">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L44">            String username = user.getUsername();</span>
+<span class="fc" id="L45">            String password = user.getPassword();</span>
+<span class="fc" id="L46">            int id = user.getId();</span>
+
+<span class="pc bpc" id="L48" title="2 of 4 branches missed.">            if (username.equals(&quot;&quot;) || password.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L49">                return null;</span>
+            }
+
+<span class="fc" id="L52">            p.setInt(3, id);</span>
+<span class="fc" id="L53">            p.setString(1, username);</span>
+<span class="fc" id="L54">            p.setString(2, password);</span>
+<span class="fc" id="L55">            p.executeUpdate();</span>
+<span class="fc" id="L56">            return user;</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L58">            e.printStackTrace();</span>
+<span class="nc" id="L59">            throw new UserDAOException(&quot;SQL error in user &quot; + user + &quot; update&quot;);</span>
+        }
+    }
+
+    @Override
+    public void delete(int id) throws UserDAOException {
+<span class="fc" id="L65">        String sql = &quot;DELETE FROM USERS WHERE ID = ?&quot;;</span>
+
+<span class="fc" id="L67">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L68">            p.setInt(1, id);</span>
+<span class="fc" id="L69">            p.executeUpdate();</span>
+<span class="nc" id="L70">        }catch (SQLException e) {</span>
+<span class="nc" id="L71">            e.printStackTrace();</span>
+<span class="nc" id="L72">            throw new UserDAOException(&quot;SQL error &quot; + id + &quot; deleted&quot;);</span>
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">    }</span>
+
+    @Override
+    public List&lt;User&gt; getByUsername(String username) throws UserDAOException {
+<span class="fc" id="L78">        String sql = &quot;SELECT ID, USERNAME, PASSWORD FROM USERS WHERE USERNAME LIKE ?&quot;;</span>
+        ResultSet rs;
+<span class="fc" id="L80">        List&lt;User&gt; users = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L82">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L83">            p.setString(1, username + '%');</span>
+<span class="fc" id="L84">            rs = p.executeQuery();</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L87">                User user = new User(</span>
+<span class="fc" id="L88">                        rs.getInt(&quot;ID&quot;),</span>
+<span class="fc" id="L89">                        rs.getString(&quot;USERNAME&quot;),</span>
+<span class="fc" id="L90">                        rs.getString(&quot;PASSWORD&quot;)</span>
+                );
+<span class="fc" id="L92">                users.add(user);</span>
+<span class="fc" id="L93">            }</span>
+
+<span class="fc" id="L95">            return users;</span>
+<span class="nc" id="L96">        }catch (SQLException e) {</span>
+<span class="nc" id="L97">            e.printStackTrace();</span>
+<span class="nc" id="L98">            throw new UserDAOException(&quot;SQL error &quot; );</span>
+        }
+    }
+
+    @Override
+    public User getById(int id) throws UserDAOException {
+<span class="fc" id="L104">        String sql = &quot;SELECT ID, USERNAME, PASSWORD FROM USERS WHERE ID = ?&quot;;</span>
+        ResultSet rs;
+<span class="fc" id="L106">        User user = null;</span>
+
+<span class="fc" id="L108">        try (Connection conn = DBUtil.getConnection(); PreparedStatement p = conn.prepareStatement(sql)){</span>
+<span class="fc" id="L109">            p.setInt(1, id);</span>
+<span class="fc" id="L110">            rs = p.executeQuery();</span>
+
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L113">                user = new User (</span>
+<span class="fc" id="L114">                        rs.getInt(&quot;ID&quot;),</span>
+<span class="fc" id="L115">                        rs.getString(&quot;USERNAME&quot;),</span>
+<span class="fc" id="L116">                        rs.getString(&quot;PASSWORD&quot;)</span>
+                );
+            }
+
+<span class="fc" id="L120">            return user;</span>
+<span class="nc" id="L121">        }catch (SQLException e) {</span>
+<span class="nc" id="L122">            e.printStackTrace();</span>
+<span class="nc" id="L123">            throw new UserDAOException(&quot;SQL error &quot;);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

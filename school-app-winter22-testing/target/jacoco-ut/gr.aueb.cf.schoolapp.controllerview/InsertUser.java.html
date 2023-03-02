@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InsertUser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.controllerview</a> &gt; <span class="el_source">InsertUser.java</span></div><h1>InsertUser.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.controllerview;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import gr.aueb.cf.schoolapp.Main;
+
+import gr.aueb.cf.schoolapp.dao.IUserDAO;
+
+import gr.aueb.cf.schoolapp.dao.UserDAOImpl;
+import gr.aueb.cf.schoolapp.dao.exceptions.UserDAOException;
+
+import gr.aueb.cf.schoolapp.dto.UserDTO;
+
+import gr.aueb.cf.schoolapp.model.User;
+
+import gr.aueb.cf.schoolapp.service.IUserService;
+
+import gr.aueb.cf.schoolapp.service.UserServiceImpl;
+import org.mindrot.jbcrypt.BCrypt;
+
+
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.JSeparator;
+import java.awt.event.ActionListener;
+
+
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JPasswordField;
+
+public class InsertUser extends JFrame {
+    private static final long serialVersionUID = 1L;
+
+<span class="nc" id="L44">    private IUserDAO userDAO = new UserDAOImpl();</span>
+<span class="nc" id="L45">    private IUserService userService = new UserServiceImpl(userDAO);</span>
+    private JPanel contentPane;
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+
+
+<span class="nc" id="L51">    public InsertUser() {</span>
+<span class="nc" id="L52">        addWindowListener(new WindowAdapter() {</span>
+            @Override
+            public void windowActivated(WindowEvent e) {
+<span class="nc" id="L55">                txtUsername.setText(&quot;&quot;);</span>
+<span class="nc" id="L56">                txtPassword.setText(&quot;&quot;);</span>
+<span class="nc" id="L57">            }</span>
+        });
+<span class="nc" id="L59">        setTitle(&quot;Εισαγωγή Χρήστη&quot;);</span>
+<span class="nc" id="L60">        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</span>
+<span class="nc" id="L61">        setBounds(100, 100, 450, 300);</span>
+<span class="nc" id="L62">        contentPane = new JPanel();</span>
+<span class="nc" id="L63">        contentPane.setBackground(new Color(248, 248, 255));</span>
+<span class="nc" id="L64">        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+
+<span class="nc" id="L66">        setContentPane(contentPane);</span>
+<span class="nc" id="L67">        contentPane.setLayout(null);</span>
+
+<span class="nc" id="L69">        JLabel lblUsername = new JLabel(&quot;Username&quot;);</span>
+<span class="nc" id="L70">        lblUsername.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L71">        lblUsername.setForeground(new Color(139, 0, 0));</span>
+<span class="nc" id="L72">        lblUsername.setFont(new Font(&quot;Tahoma&quot;, Font.BOLD, 15));</span>
+<span class="nc" id="L73">        lblUsername.setBounds(74, 68, 80, 26);</span>
+<span class="nc" id="L74">        contentPane.add(lblUsername);</span>
+
+<span class="nc" id="L76">        txtUsername = new JTextField();</span>
+<span class="nc" id="L77">        txtUsername.setBounds(162, 71, 150, 20);</span>
+<span class="nc" id="L78">        contentPane.add(txtUsername);</span>
+<span class="nc" id="L79">        txtUsername.setColumns(50);</span>
+
+<span class="nc" id="L81">        JLabel lblPassword = new JLabel(&quot;Password&quot;);</span>
+<span class="nc" id="L82">        lblPassword.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L83">        lblPassword.setForeground(new Color(139, 0, 0));</span>
+<span class="nc" id="L84">        lblPassword.setFont(new Font(&quot;Tahoma&quot;, Font.BOLD, 15));</span>
+<span class="nc" id="L85">        lblPassword.setBounds(74, 105, 80, 26);</span>
+<span class="nc" id="L86">        contentPane.add(lblPassword);</span>
+
+<span class="nc" id="L88">        JButton btnInsert = new JButton(&quot;Insert&quot;);</span>
+<span class="nc" id="L89">        btnInsert.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L91">                String inputPassword = String.valueOf(txtPassword.getPassword()).trim();</span>
+<span class="nc" id="L92">                String inputUsername = txtUsername.getText().trim();</span>
+
+<span class="nc bnc" id="L94" title="All 4 branches missed.">                    if (inputPassword.equals(&quot;&quot;) || (inputUsername.equals(&quot;&quot;))) {</span>
+<span class="nc" id="L95">                        JOptionPane.showMessageDialog(null, &quot;not valid input&quot;, &quot;insert error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L96">                        return;</span>
+                    }
+
+                    try {
+<span class="nc" id="L100">                    int workload = 12;</span>
+<span class="nc" id="L101">                    String salt = BCrypt.gensalt(workload);</span>
+<span class="nc" id="L102">                    String hashedPassword = BCrypt.hashpw(inputPassword, salt);</span>
+
+<span class="nc" id="L104">                        UserDTO userDTO = new UserDTO();</span>
+<span class="nc" id="L105">                        userDTO.setUsername(inputUsername);</span>
+<span class="nc" id="L106">                        userDTO.setPassword(hashedPassword);</span>
+
+<span class="nc" id="L108">                        User user = userService.insertUser(userDTO);</span>
+<span class="nc" id="L109">                        JOptionPane.showMessageDialog(null, &quot;record inserted&quot;, &quot;insert&quot;, JOptionPane.PLAIN_MESSAGE);</span>
+
+<span class="nc" id="L111">                } catch (UserDAOException e1) {</span>
+<span class="nc" id="L112">                    String message = e1.getMessage();</span>
+<span class="nc" id="L113">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L114">                }</span>
+<span class="nc" id="L115">            }</span>
+        });
+<span class="nc" id="L117">        btnInsert.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L118">        btnInsert.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L119">        btnInsert.setBounds(175, 188, 96, 43);</span>
+<span class="nc" id="L120">        contentPane.add(btnInsert);</span>
+
+<span class="nc" id="L122">        JButton btnClose = new JButton(&quot;Close&quot;);</span>
+<span class="nc" id="L123">        btnClose.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L125">                Main.getSearchUser().setEnabled(true);</span>
+<span class="nc" id="L126">                Main.getInsertUser().setVisible(false);</span>
+<span class="nc" id="L127">            }</span>
+        });
+<span class="nc" id="L129">        btnClose.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L130">        btnClose.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L131">        btnClose.setBounds(263, 188, 96, 43);</span>
+<span class="nc" id="L132">        contentPane.add(btnClose);</span>
+
+<span class="nc" id="L134">        JSeparator separator = new JSeparator();</span>
+<span class="nc" id="L135">        separator.setBounds(10, 170, 390, 1);</span>
+<span class="nc" id="L136">        contentPane.add(separator);</span>
+
+<span class="nc" id="L138">        txtPassword = new JPasswordField();</span>
+<span class="nc" id="L139">        txtPassword.setBounds(162, 108, 150, 20);</span>
+<span class="nc" id="L140">        contentPane.add(txtPassword);</span>
+
+<span class="nc" id="L142">        JPanel panel = new JPanel();</span>
+<span class="nc" id="L143">        panel.setBounds(37, 36, 322, 123);</span>
+<span class="nc" id="L144">        contentPane.add(panel);</span>
+<span class="nc" id="L145">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TeacherServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.service</a> &gt; <span class="el_source">TeacherServiceImpl.java</span></div><h1>TeacherServiceImpl.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.service;
+
+import gr.aueb.cf.schoolapp.dao.ITeacherDAO;
+import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
+import gr.aueb.cf.schoolapp.dto.TeacherDTO;
+import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.service.exceptions.TeacherNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TeacherServiceImpl implements ITeacherService {
+    private final ITeacherDAO teacherDAO;
+
+<span class="fc" id="L15">    public TeacherServiceImpl (ITeacherDAO teacherDAO) {</span>
+<span class="fc" id="L16">        this.teacherDAO = teacherDAO;</span>
+<span class="fc" id="L17">    }</span>
+    @Override
+    public Teacher insertTeacher(TeacherDTO teacherToInsert) throws TeacherDAOException {
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">       if (teacherToInsert == null) return null;</span>
+
+       try {
+<span class="fc" id="L23">           Teacher teacher = mapTeacher(teacherToInsert);</span>
+<span class="fc" id="L24">           return teacherDAO.insert(teacher);</span>
+<span class="nc" id="L25">       } catch (TeacherDAOException e) {</span>
+<span class="nc" id="L26">           e.printStackTrace();</span>
+<span class="nc" id="L27">           throw e;</span>
+       }
+    }
+
+    private Teacher mapTeacher(TeacherDTO dto) {
+<span class="fc" id="L32">        return new Teacher(dto.getId(), dto.getFirstname(), dto.getLastname());</span>
+    }
+
+    @Override
+    public Teacher updateTeacher(TeacherDTO teacherToUpdate) throws TeacherDAOException, TeacherNotFoundException {
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        if (teacherToUpdate == null) return null;</span>
+
+        try {
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (teacherDAO.getById(teacherToUpdate.getId()) == null) {</span>
+<span class="fc" id="L42">                throw new TeacherNotFoundException(&quot; the teacher not found&quot;);</span>
+            }
+
+<span class="fc" id="L45">            Teacher teacher = mapTeacher(teacherToUpdate);</span>
+<span class="fc" id="L46">            return teacherDAO.update(teacher);</span>
+<span class="fc" id="L47">        } catch (TeacherDAOException | TeacherNotFoundException e) {</span>
+<span class="fc" id="L48">            e.printStackTrace();</span>
+<span class="fc" id="L49">            throw e;</span>
+        }
+    }
+
+    @Override
+    public void deleteTeacher(int id) throws TeacherDAOException, TeacherNotFoundException {
+        try {
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (teacherDAO.getById(id) == null) {</span>
+<span class="fc" id="L58">                throw new TeacherNotFoundException(&quot; the teacher not found&quot;);</span>
+            }
+
+<span class="fc" id="L61">            teacherDAO.delete(id);</span>
+<span class="fc" id="L62">        } catch (TeacherDAOException | TeacherNotFoundException e) {</span>
+<span class="fc" id="L63">            e.printStackTrace();</span>
+<span class="fc" id="L64">            throw e;</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public List&lt;Teacher&gt; getTeachersByLastname(String lastname) throws TeacherDAOException{
+<span class="fc" id="L70">        List&lt;Teacher&gt; teachers = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (lastname == null) return teachers;</span>
+        try {
+<span class="fc" id="L73">             teachers = teacherDAO.getByLastname(lastname);</span>
+
+<span class="fc" id="L75">            return teachers;</span>
+<span class="nc" id="L76">        } catch (TeacherDAOException  e) {</span>
+<span class="nc" id="L77">            e.printStackTrace();</span>
+<span class="nc" id="L78">            throw e;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

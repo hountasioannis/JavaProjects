@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InsertForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.controllerview</a> &gt; <span class="el_source">InsertForm.java</span></div><h1>InsertForm.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.controllerview;
+
+import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.dao.ITeacherDAO;
+import gr.aueb.cf.schoolapp.dao.TeacherDAOImpl;
+import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
+import gr.aueb.cf.schoolapp.dto.TeacherDTO;
+import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.service.ITeacherService;
+import gr.aueb.cf.schoolapp.service.TeacherServiceImpl;
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+
+public class InsertForm extends JFrame {
+        private static final long serialVersionUID = 1L;
+
+<span class="nc" id="L24">        private ITeacherDAO teacherDAO = new TeacherDAOImpl();</span>
+<span class="nc" id="L25">        private ITeacherService teacherService = new TeacherServiceImpl(teacherDAO);</span>
+        private JPanel contentPane;
+
+        private JTextField txtLastname;
+        private JTextField txtFirstname;
+
+<span class="nc" id="L31">        public InsertForm() {</span>
+<span class="nc" id="L32">            addWindowListener(new WindowAdapter() {</span>
+                @Override
+                public void windowActivated(WindowEvent e) {
+<span class="nc" id="L35">                    txtLastname.setText(&quot;&quot;);</span>
+<span class="nc" id="L36">                    txtFirstname.setText(&quot;&quot;);</span>
+<span class="nc" id="L37">                }</span>
+            });
+<span class="nc" id="L39">            setTitle(&quot;Εισαγωγή Εκπαιδευτή&quot;);</span>
+<span class="nc" id="L40">            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</span>
+<span class="nc" id="L41">            setBounds(100, 100, 450, 300);</span>
+<span class="nc" id="L42">            contentPane = new JPanel();</span>
+<span class="nc" id="L43">            contentPane.setBackground(new Color(248, 248, 255));</span>
+<span class="nc" id="L44">            contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+
+<span class="nc" id="L46">            setContentPane(contentPane);</span>
+<span class="nc" id="L47">            contentPane.setLayout(null);</span>
+
+<span class="nc" id="L49">            JLabel lblLastname = new JLabel(&quot;Επώνυμο&quot;);</span>
+<span class="nc" id="L50">            lblLastname.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L51">            lblLastname.setForeground(new Color(139, 0, 0));</span>
+<span class="nc" id="L52">            lblLastname.setFont(new Font(&quot;Tahoma&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L53">            lblLastname.setBounds(74, 68, 80, 26);</span>
+<span class="nc" id="L54">            contentPane.add(lblLastname);</span>
+
+<span class="nc" id="L56">            txtLastname = new JTextField();</span>
+<span class="nc" id="L57">            txtLastname.setBounds(162, 71, 150, 20);</span>
+<span class="nc" id="L58">            contentPane.add(txtLastname);</span>
+<span class="nc" id="L59">            txtLastname.setColumns(50);</span>
+
+<span class="nc" id="L61">            txtFirstname = new JTextField();</span>
+<span class="nc" id="L62">            txtFirstname.setBounds(162, 108, 150, 20);</span>
+<span class="nc" id="L63">            contentPane.add(txtFirstname);</span>
+<span class="nc" id="L64">            txtFirstname.setColumns(50);</span>
+
+<span class="nc" id="L66">            JLabel lblFirstname = new JLabel(&quot;Όνομα&quot;);</span>
+<span class="nc" id="L67">            lblFirstname.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L68">            lblFirstname.setForeground(new Color(139, 0, 0));</span>
+<span class="nc" id="L69">            lblFirstname.setFont(new Font(&quot;Tahoma&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L70">            lblFirstname.setBounds(74, 105, 80, 26);</span>
+<span class="nc" id="L71">            contentPane.add(lblFirstname);</span>
+
+<span class="nc" id="L73">            JButton btnInsert = new JButton(&quot;Insert&quot;);</span>
+<span class="nc" id="L74">            btnInsert.addActionListener(new ActionListener() {</span>
+                public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L76">                String inputLastname = txtLastname.getText().trim();</span>
+<span class="nc" id="L77">                String inputFirstname = txtFirstname.getText().trim();</span>
+
+<span class="nc bnc" id="L79" title="All 4 branches missed.">                if (inputLastname.equals(&quot;&quot;) || inputFirstname.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L80">                    JOptionPane.showMessageDialog(null, &quot;not valid input&quot;, &quot;insert error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L81">                    return;</span>
+                }
+
+                try {
+<span class="nc" id="L85">                    TeacherDTO teacherDTO = new TeacherDTO();</span>
+<span class="nc" id="L86">                    teacherDTO.setFirstname(inputFirstname);</span>
+<span class="nc" id="L87">                    teacherDTO.setLastname(inputLastname);</span>
+
+<span class="nc" id="L89">                    Teacher teacher = teacherService.insertTeacher(teacherDTO);</span>
+<span class="nc" id="L90">                    JOptionPane.showMessageDialog(null, &quot;record inserted&quot;, &quot;insert&quot;, JOptionPane.PLAIN_MESSAGE);</span>
+<span class="nc" id="L91">                } catch (TeacherDAOException e1) {</span>
+<span class="nc" id="L92">                    String message = e1.getMessage();</span>
+<span class="nc" id="L93">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L94">                }</span>
+<span class="nc" id="L95">                }</span>
+            });
+
+
+<span class="nc" id="L99">                    btnInsert.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L100">                    btnInsert.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L101">                    btnInsert.setBounds(184, 188, 96, 43);</span>
+<span class="nc" id="L102">                    contentPane.add(btnInsert);</span>
+
+<span class="nc" id="L104">                    JButton btnClose = new JButton(&quot;Close&quot;);</span>
+<span class="nc" id="L105">                    btnClose.addActionListener(new ActionListener() {</span>
+                        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L107">                            Main.getSearchForm().setEnabled(true);</span>
+<span class="nc" id="L108">                            Main.getInsertForm().setVisible(false);</span>
+<span class="nc" id="L109">                        }</span>
+                    });
+<span class="nc" id="L111">                    btnClose.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L112">                    btnClose.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L113">                    btnClose.setBounds(290, 188, 96, 43);</span>
+<span class="nc" id="L114">                    contentPane.add(btnClose);</span>
+
+<span class="nc" id="L116">                    JSeparator separator = new JSeparator();</span>
+<span class="nc" id="L117">                    separator.setBounds(20, 170, 390, 1);</span>
+<span class="nc" id="L118">                    contentPane.add(separator);</span>
+
+<span class="nc" id="L120">                    JPanel panel = new JPanel();</span>
+<span class="nc" id="L121">                    panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));</span>
+<span class="nc" id="L122">                    panel.setBounds(56, 41, 305, 108);</span>
+<span class="nc" id="L123">                    contentPane.add(panel);</span>
+<span class="nc" id="L124">                }</span>
+            }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

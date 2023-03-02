@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SearchForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.controllerview</a> &gt; <span class="el_source">SearchForm.java</span></div><h1>SearchForm.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.controllerview;
+
+import gr.aueb.cf.schoolapp.Main;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class SearchForm extends JFrame {
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField txtLastname;
+    private String inputLastname;
+
+<span class="nc" id="L25">    public SearchForm() {</span>
+<span class="nc" id="L26">        addWindowListener(new WindowAdapter() {</span>
+            @Override
+            public void windowActivated(WindowEvent e) {
+<span class="nc" id="L29">                txtLastname.setText(&quot;&quot;);</span>
+<span class="nc" id="L30">            }</span>
+        });
+<span class="nc" id="L32">        setTitle(&quot;Αναζήτηση Εκπαιδευτών&quot;);</span>
+<span class="nc" id="L33">        setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource(&quot;eduv2.png&quot;)));</span>
+<span class="nc" id="L34">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L35">        setBounds(100, 100, 428, 354);</span>
+<span class="nc" id="L36">        contentPane = new JPanel();</span>
+<span class="nc" id="L37">        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+
+<span class="nc" id="L39">        setContentPane(contentPane);</span>
+<span class="nc" id="L40">        contentPane.setLayout(null);</span>
+
+<span class="nc" id="L42">        JLabel lblLastname = new JLabel(&quot;Επώνυμο&quot;);</span>
+<span class="nc" id="L43">        lblLastname.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L44">        lblLastname.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L45">        lblLastname.setBounds(154, 30, 80, 20);</span>
+<span class="nc" id="L46">        contentPane.add(lblLastname);</span>
+
+<span class="nc" id="L48">        txtLastname = new JTextField();</span>
+<span class="nc" id="L49">        txtLastname.setBounds(87, 57, 214, 25);</span>
+<span class="nc" id="L50">        contentPane.add(txtLastname);</span>
+<span class="nc" id="L51">        txtLastname.setColumns(50);</span>
+
+<span class="nc" id="L53">        JButton btnSearch = new JButton(&quot;Αναζήτηση&quot;);</span>
+<span class="nc" id="L54">        btnSearch.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L56">                inputLastname = txtLastname.getText().trim();</span>
+<span class="nc" id="L57">                Main.getSearchForm().setEnabled(false);</span>
+<span class="nc" id="L58">                Main.getUpdateDeleteForm().setVisible(true);</span>
+<span class="nc" id="L59">            }</span>
+        });
+<span class="nc" id="L61">        btnSearch.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L62">        btnSearch.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L63">        btnSearch.setBounds(122, 89, 144, 44);</span>
+<span class="nc" id="L64">        contentPane.add(btnSearch);</span>
+
+<span class="nc" id="L66">        JButton btnClose = new JButton(&quot;Close&quot;);</span>
+<span class="nc" id="L67">        btnClose.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L69">                Main.getMenu().setEnabled(true);</span>
+<span class="nc" id="L70">                Main.getSearchForm().setVisible(false);</span>
+<span class="nc" id="L71">            }</span>
+        });
+<span class="nc" id="L73">        btnClose.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L74">        btnClose.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L75">        btnClose.setBounds(248, 255, 96, 49);</span>
+<span class="nc" id="L76">        contentPane.add(btnClose);</span>
+
+<span class="nc" id="L78">        JButton btnInsert = new JButton(&quot;Εισαγωγή&quot;);</span>
+<span class="nc" id="L79">        btnInsert.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L81">                Main.getSearchForm().setEnabled(false);</span>
+<span class="nc" id="L82">                Main.getInsertForm().setVisible(true);</span>
+<span class="nc" id="L83">            }</span>
+        });
+<span class="nc" id="L85">        btnInsert.setForeground(Color.BLUE);</span>
+<span class="nc" id="L86">        btnInsert.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L87">        btnInsert.setBounds(122, 179, 144, 44);</span>
+<span class="nc" id="L88">        contentPane.add(btnInsert);</span>
+
+<span class="nc" id="L90">        JPanel panel = new JPanel();</span>
+<span class="nc" id="L91">        panel.setBounds(44, 15, 300, 134);</span>
+<span class="nc" id="L92">        contentPane.add(panel);</span>
+
+<span class="nc" id="L94">        JPanel panel_1 = new JPanel();</span>
+<span class="nc" id="L95">        panel_1.setBounds(44, 161, 300, 81);</span>
+<span class="nc" id="L96">        contentPane.add(panel_1);</span>
+<span class="nc" id="L97">    }</span>
+
+    public String getInputLastname() {
+<span class="nc" id="L100">        return inputLastname;</span>
+    }
+
+
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

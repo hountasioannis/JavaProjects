@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="el"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UpdateDeleteUser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">schoolapp in school-app-winter22 Coverage Results</a> &gt; <a href="index.source.html" class="el_package">gr.aueb.cf.schoolapp.controllerview</a> &gt; <span class="el_source">UpdateDeleteUser.java</span></div><h1>UpdateDeleteUser.java</h1><pre class="source lang-java linenums">package gr.aueb.cf.schoolapp.controllerview;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.border.EmptyBorder;
+
+import gr.aueb.cf.schoolapp.Main;
+
+import gr.aueb.cf.schoolapp.dao.IUserDAO;
+
+import gr.aueb.cf.schoolapp.dao.UserDAOImpl;
+
+import gr.aueb.cf.schoolapp.dao.exceptions.UserDAOException;
+
+import gr.aueb.cf.schoolapp.dto.UserDTO;
+
+import gr.aueb.cf.schoolapp.model.User;
+
+import gr.aueb.cf.schoolapp.service.IUserService;
+
+import gr.aueb.cf.schoolapp.service.UserServiceImpl;
+
+import gr.aueb.cf.schoolapp.service.exceptions.UserNotFoundException;
+import org.mindrot.jbcrypt.BCrypt;
+
+
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.List;
+
+public class UpdateDeleteUser extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField txtId;
+    private JTextField txtUsername;
+    private JTextField txtPassword;
+
+<span class="nc" id="L54">    private IUserDAO userDAO = new UserDAOImpl();</span>
+<span class="nc" id="L55">    private IUserService userService = new UserServiceImpl(userDAO);</span>
+    private int listPosition;
+    private int listSize;
+    List&lt;User&gt; users;
+
+<span class="nc" id="L60">    public UpdateDeleteUser() {</span>
+<span class="nc" id="L61">        addWindowListener(new WindowAdapter() {</span>
+            @Override
+            public void windowActivated(WindowEvent e) {
+                try {
+<span class="nc" id="L65">                    users = userService.getUsersByUsername(Main.getSearchUser().getInputUsername());</span>
+<span class="nc" id="L66">                    listPosition = 0;</span>
+<span class="nc" id="L67">                    listSize = users.size();</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                    if (listSize == 0) {</span>
+<span class="nc" id="L70">                        txtId.setText(&quot;&quot;);</span>
+<span class="nc" id="L71">                        txtUsername.setText(&quot;&quot;);</span>
+<span class="nc" id="L72">                        txtPassword.setText(&quot;&quot;);</span>
+<span class="nc" id="L73">                        return;</span>
+                    }
+
+<span class="nc" id="L76">                    txtId.setText(Integer.toString(users.get(listPosition).getId()));</span>
+<span class="nc" id="L77">                    txtUsername.setText(users.get(listPosition).getUsername());</span>
+<span class="nc" id="L78">                    txtPassword.setText(users.get(listPosition).getPassword());</span>
+
+
+<span class="nc" id="L81">                } catch (UserDAOException e1) {</span>
+<span class="nc" id="L82">                    String message = e1.getMessage();</span>
+<span class="nc" id="L83">                    JOptionPane.showMessageDialog(null, message, &quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L84">                }</span>
+<span class="nc" id="L85">            }</span>
+
+        });
+<span class="nc" id="L88">        setResizable(false);</span>
+<span class="nc" id="L89">        setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource(&quot;eduv2.png&quot;)));</span>
+<span class="nc" id="L90">        setTitle(&quot;Ενημέρωση / Διαγραφή Χρήστη&quot;);</span>
+<span class="nc" id="L91">        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</span>
+<span class="nc" id="L92">        setBounds(100, 100, 423, 300);</span>
+<span class="nc" id="L93">        contentPane = new JPanel();</span>
+<span class="nc" id="L94">        contentPane.setBackground(new Color(245, 255, 250));</span>
+<span class="nc" id="L95">        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+
+<span class="nc" id="L97">        setContentPane(contentPane);</span>
+<span class="nc" id="L98">        contentPane.setLayout(null);</span>
+
+<span class="nc" id="L100">        JLabel lblUsername = new JLabel(&quot;Username&quot;);</span>
+<span class="nc" id="L101">        lblUsername.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L102">        lblUsername.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L103">        lblUsername.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 15));</span>
+<span class="nc" id="L104">        lblUsername.setBounds(22, 55, 68, 20);</span>
+<span class="nc" id="L105">        contentPane.add(lblUsername);</span>
+
+<span class="nc" id="L107">        txtId = new JTextField();</span>
+<span class="nc" id="L108">        txtId.setBackground(new Color(245, 245, 220));</span>
+<span class="nc" id="L109">        txtId.setEditable(false);</span>
+<span class="nc" id="L110">        txtId.setBounds(100, 21, 38, 20);</span>
+<span class="nc" id="L111">        contentPane.add(txtId);</span>
+<span class="nc" id="L112">        txtId.setColumns(10);</span>
+
+<span class="nc" id="L114">        txtUsername = new JTextField();</span>
+<span class="nc" id="L115">        txtUsername.setBounds(100, 55, 170, 20);</span>
+<span class="nc" id="L116">        contentPane.add(txtUsername);</span>
+<span class="nc" id="L117">        txtUsername.setColumns(50);</span>
+
+<span class="nc" id="L119">        txtPassword = new JPasswordField();</span>
+<span class="nc" id="L120">        txtPassword.setBounds(100, 91, 170, 20);</span>
+<span class="nc" id="L121">        contentPane.add(txtPassword);</span>
+<span class="nc" id="L122">        txtPassword.setColumns(50);</span>
+
+<span class="nc" id="L124">        JSeparator separator = new JSeparator();</span>
+<span class="nc" id="L125">        separator.setBounds(22, 146, 370, 1);</span>
+<span class="nc" id="L126">        contentPane.add(separator);</span>
+
+<span class="nc" id="L128">        JButton btnFirst = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L129">        btnFirst.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (listSize &gt; 0) {</span>
+<span class="nc" id="L132">                    listPosition = 0;</span>
+<span class="nc" id="L133">                    txtId.setText(String.format(&quot;%s&quot;, users.get(listPosition).getId()));</span>
+<span class="nc" id="L134">                    txtUsername.setText(users.get(listPosition).getUsername());</span>
+<span class="nc" id="L135">                    txtPassword.setText(users.get(listPosition).getPassword());</span>
+                }
+<span class="nc" id="L137">            }</span>
+        });
+<span class="nc" id="L139">        btnFirst.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;First record.png&quot;)));</span>
+<span class="nc" id="L140">        btnFirst.setBounds(22, 158, 46, 23);</span>
+<span class="nc" id="L141">        contentPane.add(btnFirst);</span>
+
+<span class="nc" id="L143">        JButton btnPrevious = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L144">        btnPrevious.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (listPosition &gt; 0) {</span>
+<span class="nc" id="L147">                    listPosition--;</span>
+<span class="nc" id="L148">                    txtId.setText(String.format(&quot;%s&quot;, users.get(listPosition).getId()));</span>
+<span class="nc" id="L149">                    txtUsername.setText(users.get(listPosition).getUsername());</span>
+<span class="nc" id="L150">                    txtPassword.setText(users.get(listPosition).getPassword());</span>
+                }
+<span class="nc" id="L152">            }</span>
+        });
+<span class="nc" id="L154">        btnPrevious.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Previous_record.png&quot;)));</span>
+<span class="nc" id="L155">        btnPrevious.setBounds(69, 158, 46, 23);</span>
+<span class="nc" id="L156">        contentPane.add(btnPrevious);</span>
+
+<span class="nc" id="L158">        JButton btnNext = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L159">        btnNext.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                if (listPosition &lt;= listSize - 2) {</span>
+<span class="nc" id="L162">                    listPosition++;</span>
+<span class="nc" id="L163">                    txtId.setText(String.format(&quot;%s&quot;, users.get(listPosition).getId()));</span>
+<span class="nc" id="L164">                    txtUsername.setText(users.get(listPosition).getUsername());</span>
+<span class="nc" id="L165">                    txtPassword.setText(users.get(listPosition).getPassword());</span>
+                }
+<span class="nc" id="L167">            }</span>
+        });
+<span class="nc" id="L169">        btnNext.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Next_track.png&quot;)));</span>
+<span class="nc" id="L170">        btnNext.setBounds(116, 158, 46, 23);</span>
+<span class="nc" id="L171">        contentPane.add(btnNext);</span>
+
+<span class="nc" id="L173">        JButton btnLast = new JButton(&quot;&quot;);</span>
+<span class="nc" id="L174">        btnLast.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                if (listSize &gt; 0) {</span>
+<span class="nc" id="L177">                    listPosition = listSize - 1;</span>
+<span class="nc" id="L178">                    txtId.setText(String.format(&quot;%s&quot;, users.get(listPosition).getId()));</span>
+<span class="nc" id="L179">                    txtUsername.setText(users.get(listPosition).getUsername());</span>
+<span class="nc" id="L180">                    txtPassword.setText(users.get(listPosition).getPassword());</span>
+                }
+<span class="nc" id="L182">            }</span>
+        });
+<span class="nc" id="L184">        btnLast.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(&quot;Last_Record.png&quot;)));</span>
+<span class="nc" id="L185">        btnLast.setBounds(163, 158, 46, 23);</span>
+<span class="nc" id="L186">        contentPane.add(btnLast);</span>
+
+<span class="nc" id="L188">        JButton btnDelete = new JButton(&quot;Delete&quot;);</span>
+<span class="nc" id="L189">        btnDelete.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+                int response;
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                if (txtId.getText().equals(&quot;&quot;)) return;</span>
+                try {
+<span class="nc" id="L194">                    int id =  Integer.parseInt(txtId.getText().trim());</span>
+
+<span class="nc" id="L196">                    response = JOptionPane.showConfirmDialog(null, &quot;Είστε σίγουρος&quot;, &quot;Delete&quot;,</span>
+                            JOptionPane.YES_NO_OPTION );
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                    if (response == JOptionPane.YES_OPTION) {</span>
+<span class="nc" id="L200">                        userService.deleteUser(id);</span>
+<span class="nc" id="L201">                        JOptionPane.showMessageDialog(null,  &quot; record deleted&quot;,</span>
+                                &quot;Delete&quot;, JOptionPane.INFORMATION_MESSAGE);
+                    }
+<span class="nc" id="L204">                } catch (UserDAOException | UserNotFoundException e1) {</span>
+<span class="nc" id="L205">                    String message = e1.getMessage();</span>
+<span class="nc" id="L206">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L207">                }</span>
+<span class="nc" id="L208">            }</span>
+        });
+<span class="nc" id="L210">        btnDelete.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L211">        btnDelete.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L212">        btnDelete.setBounds(22, 202, 98, 36);</span>
+<span class="nc" id="L213">        contentPane.add(btnDelete);</span>
+
+<span class="nc" id="L215">        JButton btnUpdate = new JButton(&quot;Update&quot;);</span>
+<span class="nc" id="L216">        btnUpdate.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                if (txtId.getText().equals(&quot;&quot;)) return;</span>
+<span class="nc" id="L219">                String inputUsername = txtUsername.getText().trim();</span>
+<span class="nc" id="L220">                String inputPassword = String.valueOf(((JPasswordField) txtPassword).getPassword()).trim();</span>
+<span class="nc" id="L221">                String inputId = txtId.getText();</span>
+
+<span class="nc bnc" id="L223" title="All 4 branches missed.">                if (inputUsername.equals(&quot;&quot;) || (inputPassword.equals(&quot;&quot;))) {</span>
+<span class="nc" id="L224">                    JOptionPane.showMessageDialog(null, &quot;not valid input&quot;, &quot;update error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L225">                    return;</span>
+                }
+
+                try {
+<span class="nc" id="L229">                    int workload = 12;</span>
+<span class="nc" id="L230">                    String salt = BCrypt.gensalt(workload);</span>
+<span class="nc" id="L231">                    String hashedPassword = BCrypt.hashpw(inputPassword, salt);</span>
+
+<span class="nc" id="L233">                    UserDTO userDTO = new UserDTO();</span>
+<span class="nc" id="L234">                    userDTO.setId(Integer.parseInt(inputId));</span>
+<span class="nc" id="L235">                    userDTO.setUsername(inputUsername);</span>
+<span class="nc" id="L236">                    userDTO.setPassword(hashedPassword);</span>
+
+<span class="nc" id="L238">                    User user = userService.updateUser(userDTO);</span>
+<span class="nc" id="L239">                    JOptionPane.showMessageDialog(null,  &quot; record updated&quot;,</span>
+                            &quot;UPDATE&quot;, JOptionPane.PLAIN_MESSAGE);
+<span class="nc" id="L241">                } catch (UserDAOException | UserNotFoundException e1) {</span>
+<span class="nc" id="L242">                    String message = e1.getMessage();</span>
+<span class="nc" id="L243">                    JOptionPane.showMessageDialog(null, message,&quot;error&quot;, JOptionPane.ERROR_MESSAGE);</span>
+<span class="nc" id="L244">                }</span>
+
+<span class="nc" id="L246">            }</span>
+        });
+<span class="nc" id="L248">        btnUpdate.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L249">        btnUpdate.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L250">        btnUpdate.setBounds(121, 202, 98, 36);</span>
+<span class="nc" id="L251">        contentPane.add(btnUpdate);</span>
+
+<span class="nc" id="L253">        JButton btnClose = new JButton(&quot;Close&quot;);</span>
+<span class="nc" id="L254">        btnClose.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L256">                Main.getSearchUser().setEnabled(true);</span>
+<span class="nc" id="L257">                Main.getUpdateDeleteUser().setVisible(false);</span>
+<span class="nc" id="L258">            }</span>
+
+        });
+<span class="nc" id="L261">        btnClose.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L262">        btnClose.setForeground(new Color(0, 0, 255));</span>
+<span class="nc" id="L263">        btnClose.setBounds(220, 202, 98, 36);</span>
+<span class="nc" id="L264">        contentPane.add(btnClose);</span>
+
+<span class="nc" id="L266">        JLabel lblId = new JLabel(&quot;Κωδικός&quot;);</span>
+<span class="nc" id="L267">        lblId.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L268">        lblId.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L269">        lblId.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L270">        lblId.setBounds(22, 19, 68, 20);</span>
+<span class="nc" id="L271">        contentPane.add(lblId);</span>
+
+<span class="nc" id="L273">        JLabel lblPassword = new JLabel(&quot;Password&quot;);</span>
+<span class="nc" id="L274">        lblPassword.setHorizontalAlignment(SwingConstants.TRAILING);</span>
+<span class="nc" id="L275">        lblPassword.setForeground(new Color(165, 42, 42));</span>
+<span class="nc" id="L276">        lblPassword.setFont(new Font(&quot;Tahoma&quot;, Font.PLAIN, 16));</span>
+<span class="nc" id="L277">        lblPassword.setBounds(22, 91, 68, 20);</span>
+<span class="nc" id="L278">        contentPane.add(lblPassword);</span>
+<span class="nc" id="L279">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
